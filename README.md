@@ -9,6 +9,7 @@
         We also include middleware to handle CORS and error handling middleware.
 
     Frontend React App:
+    
         We navigate to our frontend project directory in the terminal.
         We ensure that we have all the dependencies installed (npm install).
         We run the frontend app (npm start or yarn start). This will start our React app running on a development server (typically on port 3000 by default).
@@ -24,3 +25,5 @@
         The frontend then updates its UI based on the responses received from the backend, providing a seamless user experience.
 
 In summary, we run our backend server to handle data operations and our frontend React app to provide a user interface for interacting with that data. The two communicate via HTTP requests, allowing users to interact with the photo gallery application seamlessly.
+
+(I ran out of time and couldnt debug everything, thank you for the oppu!rtunity regarding the result, wish you and the team good luck!)
