@@ -1,4 +1,4 @@
-
+// PhotoList.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -8,7 +8,7 @@ const PhotoList = ({ onSelect }) => {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const response = await axios.get('/photos');
+        const response = await axios.get('http://localhost:4000'); // Update the URL to match your backend server
         if (Array.isArray(response.data)) {
           setPhotos(response.data);
         } else {
@@ -16,7 +16,6 @@ const PhotoList = ({ onSelect }) => {
         }
       } catch (err) {
         console.error('Error fetching photos:', err);
-
         setPhotos([]);
       }
     };

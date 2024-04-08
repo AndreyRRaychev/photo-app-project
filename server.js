@@ -1,13 +1,11 @@
 require('dotenv').config(); 
-
 const express = require('express');
 const admin = require('firebase-admin');
-const { initializeApp } = admin;
-const { getFirestore, collection, addDoc, getDocs, query, limit, where, doc, getDoc, updateDoc, deleteDoc } = require('firebase-admin/firestore');
+const { getFirestore, collection, addDoc, getDocs, query, limit, doc, getDoc, updateDoc, deleteDoc } = require('firebase-admin/firestore');
+const cors = require('cors'); // Import the CORS middleware
 
 const app = express();
-const port = process.env.PORT || 3000;
-
+const port = process.env.PORT || 4000;
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -18,15 +16,17 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID
 };
 
-const firebaseApp = initializeApp({
+// Initialize Firebase Admin SDK
+admin.initializeApp({
   credential: admin.credential.applicationDefault(),
   ...firebaseConfig
 });
 
 // Middleware
 app.use(express.json());
+app.use(cors()); // Enable CORS
 
-const db = getFirestore(firebaseApp);
+const db = admin.firestore();
 
 // CRUD operations for photos
 // Create and upload new photo
@@ -49,13 +49,10 @@ app.post('/photos', async (req, res, next) => {
 app.get('/photos', async (req, res, next) => {
   try {
     const photosSnapshot = await getDocs(query(collection(db, 'photos'), limit(6)));
-    const photos = [];
-    photosSnapshot.forEach((doc) => {
-      photos.push({
-        id: doc.id,
-        data: doc.data()
-      });
-    });
+    const photos = photosSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
 
     res.status(200).send(photos);
   } catch (error) {
@@ -74,7 +71,7 @@ app.get('/photos/:id', async (req, res, next) => {
     } else {
       res.status(200).send({
         id: photoSnapshot.id,
-        data: photoSnapshot.data()
+        ...photoSnapshot.data()
       });
     }
   } catch (error) {
