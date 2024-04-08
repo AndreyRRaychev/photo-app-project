@@ -1,6 +1,8 @@
+// components/App.jsx
 import React, { useState } from 'react';
-import PhotoForm from './components/PhotoForm';
-import PhotoList from './components/PhotoList';
+import { AppContainer, Heading, SuccessMessage } from '../src/components/styled/AppStyles';
+import PhotoForm from '../src/components/PhotoForm';
+import PhotoList from '../src/components/PhotoList';
 
 const App = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -17,13 +19,13 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Photo Gallery App</h1>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+    <AppContainer>
+      <Heading>Photo Gallery App</Heading>
+      {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
       <PhotoForm onSuccess={handleSuccess} photoToUpdate={selectedPhoto} />
       <hr />
       <PhotoList onSelect={handlePhotoSelect} />
-    </div>
+    </AppContainer>
   );
 };
 

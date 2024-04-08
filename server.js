@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const admin = require('firebase-admin');
 const { getFirestore, collection, addDoc, getDocs, query, limit, doc, getDoc, updateDoc, deleteDoc } = require('firebase-admin/firestore');
+const cors = require('cors'); // Import the cors package
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -21,6 +22,9 @@ admin.initializeApp({
   ...firebaseConfig
 });
 
+// Middleware for CORS
+app.use(cors()); // Use cors middleware
+
 // Middleware
 app.use(express.json());
 
@@ -28,7 +32,7 @@ const db = admin.firestore();
 
 // Serve favicon
 app.get('/favicon.ico', (req, res) => {
-  res.status(204);
+  res.status(204).end();
 });
 
 // Route for root URL

@@ -6,7 +6,7 @@ const PhotoItem = ({ photo, onEdit, onDelete }) => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this photo?')) {
       try {
-        await axios.delete(`/photos/${photo.id}`);
+        await axios.delete(`/${photo.id}`);
         onDelete(photo.id);
       } catch (err) {
         console.error('Error deleting photo:', err);

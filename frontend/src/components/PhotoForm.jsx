@@ -11,7 +11,7 @@ const PhotoForm = ({ onSuccess, photoToUpdate }) => {
     e.preventDefault();
     try {
       if (photoToUpdate) {
-        await axios.put(`/photos/${photoToUpdate.id}`, { title, description });
+        await axios.put(`/${photoToUpdate.id}`, { title, description });
         onSuccess('Photo updated successfully');
       } else {
         await axios.post('/photos', { title, description });
