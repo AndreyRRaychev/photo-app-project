@@ -1,8 +1,7 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const admin = require('firebase-admin');
 const { getFirestore, collection, addDoc, getDocs, query, limit, doc, getDoc, updateDoc, deleteDoc } = require('firebase-admin/firestore');
-const cors = require('cors'); // Import the CORS middleware
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -24,9 +23,18 @@ admin.initializeApp({
 
 // Middleware
 app.use(express.json());
-app.use(cors()); // Enable CORS
 
 const db = admin.firestore();
+
+// Serve favicon
+app.get('/favicon.ico', (req, res) => {
+  res.status(204);
+});
+
+// Route for root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the photo app!');
+});
 
 // CRUD operations for photos
 // Create and upload new photo
