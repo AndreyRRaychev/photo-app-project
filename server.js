@@ -1,30 +1,32 @@
-// server.js
+require('dotenv').config(); 
+
 const express = require('express');
-const { initializeApp } = require('firebase-admin');
+const admin = require('firebase-admin');
+const { initializeApp } = admin;
 const { getFirestore, collection, addDoc, getDocs, query, limit, where, doc, getDoc, updateDoc, deleteDoc } = require('firebase-admin/firestore');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDi4arxaBQAS7PwP0hAzDNCrFcnD-oFv0U",
-  authDomain: "photo-app-7cc84.firebaseapp.com",
-  projectId: "photo-app-7cc84",
-  storageBucket: "photo-app-7cc84.appspot.com",
-  messagingSenderId: "405413248732",
-  appId: "1:405413248732:web:5ae380f09ca16b410c7e19"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID
 };
 
-
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp({
+  credential: admin.credential.applicationDefault(),
+  ...firebaseConfig
+});
 
 // Middleware
 app.use(express.json());
 
-
 const db = getFirestore(firebaseApp);
-
 
 // CRUD operations for photos
 // Create and upload new photo
@@ -35,8 +37,8 @@ app.post('/photos', async (req, res, next) => {
     const photoRef = await addDoc(collection(db, 'photos'), {
       title,
       description
-
     });
+
     res.status(201).send({ id: photoRef.id });
   } catch (error) {
     next(error);
@@ -54,6 +56,7 @@ app.get('/photos', async (req, res, next) => {
         data: doc.data()
       });
     });
+
     res.status(200).send(photos);
   } catch (error) {
     next(error);
@@ -65,6 +68,7 @@ app.get('/photos/:id', async (req, res, next) => {
   try {
     const photoId = req.params.id;
     const photoSnapshot = await getDoc(doc(db, 'photos', photoId));
+    
     if (!photoSnapshot.exists()) {
       res.status(404).send('Photo not found');
     } else {
@@ -84,11 +88,12 @@ app.put('/photos/:id', async (req, res, next) => {
     const photoId = req.params.id;
     const { title, description } = req.body;
     const photoRef = doc(db, 'photos', photoId);
+
     await updateDoc(photoRef, {
       title,
       description
-  
     });
+
     res.status(200).send('Photo updated successfully');
   } catch (error) {
     next(error);
@@ -100,6 +105,7 @@ app.delete('/photos/:id', async (req, res, next) => {
   try {
     const photoId = req.params.id;
     await deleteDoc(doc(db, 'photos', photoId));
+    
     res.status(200).send('Photo deleted successfully');
   } catch (error) {
     next(error);
